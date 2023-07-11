@@ -3,11 +3,10 @@ import './LoginPage.css';
 import LoginForm  from '../LoginForm/LoginForm';
 import SignUp from '../SignUp/SignUp';
 
-const LoginPage = () => {
+const LoginPage = (props) => {
     return
     <div>
-    // <LoginForm />
-    <SignUp />
+        <LoginForm />
     </div>
     
 } 
