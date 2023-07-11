@@ -1,5 +1,8 @@
 // DEPENDENCIES
-const express = require('express')
+const express = require("express")
+const http = require("http")
+const socketio = require("socket.io")
+const cors = require("cors")
 
 // CONFIGURATION
 require('dotenv').config()

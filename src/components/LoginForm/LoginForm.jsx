@@ -1,7 +1,7 @@
 import React from 'react';
 import './LoginForm.css'
 
-const LoginForm = (props) => {
+const LoginForm = () => {
     return <div className='login'>
         <form className='loginform'>
             <div className='top'>
