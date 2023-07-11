@@ -24,23 +24,34 @@
     text-align: center;
 }
 
+.top {
 
+    flex-direction: column;
+}
 
 .loginform input {
-    background-color: #d9fff8 ;
-    padding: 0;
-    margin: 0;
-    border-radius: .75rem;
+    background-color: #d9fff8;
+    border-radius: 2rem;
     text-align: center;
     width: 20rem;
     height: 2rem;
     font-weight: bold;
+    margin: 0;
 }
 
 .loginform .submit {
     background-color: #aa7bc3;
     font-weight: bold;
+    width: 20rem;
+    height: 2rem;
 }
+
+.forgot {
+    color: #d9fff8;
+    margin-top: 3rem;
+
+}
+
 .bottom input {
     justify-content: center;
     margin-top: 5rem;
