@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@1,300&family=Rubik:wght@500&display=swap');
+
+.login {
+    width: 500px;
+    height: 650px;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #aa7bc3;
+    text-align: center;
+    margin: 1em;
+    padding: 1em;
+    border-radius: 1em;
+}
+
+.loginform {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #aa7bc3;
+    text-align: center;
+}
+
+
+
+.loginform input {
+    background-color: #d9fff8 ;
+    padding: 0;
+    margin: 0;
+    border-radius: .75rem;
+    text-align: center;
+    width: 20rem;
+    height: 2rem;
+    font-weight: bold;
+}
+
+.loginform .submit {
+    background-color: #aa7bc3;
+    font-weight: bold;
+}
+.bottom input {
+    justify-content: center;
+    margin-top: 5rem;
+    background-color: #11b5e4;
+}
+
+
+@media only screen and (max-width: 620px) {
+    .login {
+        width: 80vw;
+        padding: auto;
+        margin: auto;
+    }
+}
+
+@media only screen and (max-height: 680px) {
+    .login {
+        height: 80vh;
+        padding: auto;
+        margin: auto;
+    }
+}
