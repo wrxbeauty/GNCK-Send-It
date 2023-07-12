@@ -1,0 +1,39 @@
+import express from "express";
+import http from "http";
+import path from "path";
+import { Server } from "socket.io";
+import { fileURLToPath } from "url";
+import cors from "cors";
+
+const app = express();
+const PORT = 5001;
+
+const httpServer = http.createServer(app);
+const socketIOServer = new Server(httpServer, {
+  cors: {
+    origin: ["http://localhost:3000"],
+  },
+});
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(cors());
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});
+
+socketIOServer.on("connection", (socket) => {
+  socket.on("message-from-client", (data) => {
+    socket.broadcast.emit("message", data); // Emit to all other connected sockets except the sender
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User left!");
+  });
+});
+
+httpServer.listen(PORT, () => {
+  console.log("server is running at http://localhost:5001");
+});
