@@ -52,10 +52,20 @@
 
 }
 
-.bottom input {
+.bottom {
+    margin-top: 3rem;
+    color: #d9fff8;
+    width: 20rem;
+    height: 2rem;
     justify-content: center;
-    margin-top: 5rem;
+    border-radius: 2rem;
     background-color: #11b5e4;
+}
+
+.bottom p {
+    font-weight: bold;
+    margin: 0.3rem;
+    
 }
 
 
