@@ -3,7 +3,7 @@ import './LoginPage.css';
 import LoginForm  from '../LoginForm/LoginForm';
 import SignUp from '../SignUp/SignUp';
 
-const LoginPage = (props) => {
+const LoginPage = () => {
     return
     <div>
         <LoginForm />
