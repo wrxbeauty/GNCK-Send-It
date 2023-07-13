@@ -15,11 +15,11 @@ const app = express()
 const server = require('http').Server(app);
 const io = socketio(server);
 const userRoutes = require("./routes/NewUser")
-const authRoutes = require("./routes")
+const authRoutes = require("./routes/authorize")
 
 
 //MongoDB Connection
-mongoose.connect("mongodb://localhost:27017")
+mongoose.connect("MONGODB_URI=mongodb+srv://Send-IT:s4a23hVo2OYQdGPo@cluster0.4enoych.mongodb.net/?retryWrites=true&w=majority")
 
 //db connection
 connection()
@@ -29,14 +29,16 @@ app.use(express.json())
 app.use(cors())
 
 // API ROUTES
-app.get('/', (req, res) => {
-  res.send('SendIt app response')
-})
+// app.get('/', (req, res) => {
+//   res.send('SendIt app response')
+// })
+
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes)
 
 // LISTEN
-server.listen(PORT, () =>
-  console.log(`Server is up and running on port ${PORT}...`)
-)
-//app.listen(PORT, () => {
- // console.log('listening on port', PORT);
-//})
+
+const port = process.env.PORT || 3005
+app.listen(PORT, () => {
+  console.log('listening on port', PORT);
+})

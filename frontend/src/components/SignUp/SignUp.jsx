@@ -20,7 +20,6 @@ const SignUp = () => {
                         <p className='name'><input type="text" placeholder='Enter your name' onChange={(e) => setName(e.target.value)} /></p>
                         <p className='email'><input type="text" placeholder='Enter your email' onChange={(e) => setEmail(e.target.value)} /></p>
                         <p className='password'><input type="password" placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} /></p>
-                        <p className='password'><input type="password" placeholder='Confirm password' /></p>
                         <input className="submit" type="submit" value="SUBMIT" />
 
                     </div>
