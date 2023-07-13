@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
 import SendIcon from "@mui/icons-material/Send";
 import Card from "@mui/material/Card";
@@ -12,6 +13,7 @@ function ChatWindow() {
   const [socket, setSocket] = useState(null);
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
+  const [typing, setTyping] = useState(false);
 
   useEffect(() => {
     setSocket(io("http://localhost:5001"));
@@ -21,7 +23,16 @@ function ChatWindow() {
     if (!socket) return;
 
     socket.on("message", (data) => {
-      setChat((prev) => [...prev, { message: data.message, sender: false }]);
+  setChat((prev) => [...prev, { message: data.message, sender: false }]);
+});
+
+
+    socket.on("typing-started-from-server", () => {
+      setTyping(true);
+    });
+      
+    socket.on("typing-stopped-from-server", () => {
+      setTyping(false);
     });
 
     return () => {
@@ -35,6 +46,23 @@ function ChatWindow() {
     socket.emit("message-from-client", { message });
     setMessage("");
   }
+ const [typingTimeout, setTypingTimeout] = useState(null);
+
+function handleInput(e) {
+  setMessage(e.target.value);
+  socket.emit("typing-started");
+  
+  if (typingTimeout) {
+    clearTimeout(typingTimeout);
+  }
+  
+  const newTimeout = setTimeout(() => {
+    socket.emit("typing-stopped");
+  }, 1000);
+  
+  setTypingTimeout(newTimeout);
+}
+
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -61,13 +89,21 @@ function ChatWindow() {
         </Box>
 
         <Box component="form" onSubmit={handleForm}>
+          {typing && (
+            <InputLabel sx={{ color: "white" }} shrink htmlFor="message-input">
+              Typing...
+            </InputLabel>
+          )}
           <OutlinedInput
             sx={{ backgroundColor: "white" }}
+            size="small"
             fullWidth
+            id="message-input"
             label="Write your message"
             value={message}
             placeholder="Write your message"
-            onChange={(e) => setMessage(e.target.value)}
+            inputProps={{ "aria-label": "search google maps" }}
+            onChange={handleInput}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton type="submit" edge="end">

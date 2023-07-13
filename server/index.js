@@ -34,6 +34,14 @@ socketIOServer.on("connection", (socket) => {
     socket.broadcast.emit("message", data); // Emit to all other connected sockets except the sender
   });
 
+  socket.on("typing-started", () => {
+    socket.broadcast.emit("typing-started-from-server");
+  });
+
+  socket.on("typing-stopped", () => {
+    socket.broadcast.emit("typing-stopped-from-server");
+  });
+
   socket.on("disconnect", () => {
     console.log("User left!");
   });
