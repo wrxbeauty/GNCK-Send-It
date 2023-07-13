@@ -1,26 +1,39 @@
 import { useState, React } from 'react'
 import './SignUp.css'
+import axios from 'axios';
 
 const SignUp = () => {
-    const [name, setName] = useState()
-    const [email, setEmail] = useState()
-    const [password, setPassword] = useState()
+    const [data, setData] = useState({
+        name: "",
+        email: "",
+        password: "",
+    })
 
-    const handleSubmit = (e) => {
+    const handleChange = ({currentTarget: input}) => {
+        setData({...data, [input.name]: input.value });
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        postMessage('http://localhost.3005/signup', { name, email, password })
+        try {
+            const url = "https://localhost:3005/api/users";
+            const { data:res } = await axios.post(url, data);
+            console.log(res.message)
+        } catch(error) {
+            console.error(error)
+        }
     }
 
     return (
         <div>
-            <div className='signup'>
+            <div className='signup' >
                 <form className='signupform' onSubmit={handleSubmit}>
                     <div className='top'>
                         <h1>Sign Up</h1>
-                        <p className='name'><input type="text" placeholder='Enter your name' onChange={(e) => setName(e.target.value)} /></p>
-                        <p className='email'><input type="text" placeholder='Enter your email' onChange={(e) => setEmail(e.target.value)} /></p>
-                        <p className='password'><input type="password" placeholder='Enter password' onChange={(e) => setPassword(e.target.value)} /></p>
-                        <input className="submit" type="submit" value="SUBMIT" />
+                        <p className='input'><input type="text" name="name" value={data.name} placeholder='Enter your name'  onChange={handleChange} /></p>
+                        <p className='input'><input type="email" name="email" placeholder='Enter your email' value={data.email} onChange={handleChange} /></p>
+                        <p className='input'><input type="password" name="paswword" placeholder='Enter password' value={data.password} onChange={handleChange} /></p>
+                        <button className="submit" type="submit" onClick={handleSubmit}>SUBMIT</button>
 
                     </div>
                 </form>
