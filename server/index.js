@@ -12,8 +12,12 @@ const httpServer = http.createServer(app);
 const socketIOServer = new Server(httpServer, {
   cors: {
     origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
   },
 });
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,6 +30,7 @@ app.get("/", (req, res) => {
 
 socketIOServer.on("connection", (socket) => {
   socket.on("message-from-client", (data) => {
+    console.log("Received message from client:", data.message);
     socket.broadcast.emit("message", data); // Emit to all other connected sockets except the sender
   });
 
