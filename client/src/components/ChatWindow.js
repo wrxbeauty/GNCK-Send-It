@@ -7,13 +7,14 @@ import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
 import SendIcon from "@mui/icons-material/Send";
 import Card from "@mui/material/Card";
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useParams } from 'react-router-dom';
 
 export default function ChatWindow() {
   const { socket } = useOutletContext();
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
   const [typing, setTyping] = useState(false);
+  const { roomId } = useParams();
 
  
 
@@ -40,7 +41,7 @@ export default function ChatWindow() {
   function handleForm(e) {
     e.preventDefault();
     setChat((prev) => [...prev, { message: message, sender: true }]);
-    socket.emit("message-from-client", { message });
+    socket.emit("message-from-client", { message, roomId });
     setMessage("");
   }
 
@@ -48,14 +49,14 @@ export default function ChatWindow() {
 
   function handleInput(e) {
     setMessage(e.target.value);
-    socket.emit("typing-started");
+    socket.emit("typing-started", { roomId });
 
     if (typingTimeout) {
       clearTimeout(typingTimeout);
     }
 
     const newTimeout = setTimeout(() => {
-      socket.emit("typing-stopped");
+      socket.emit("typing-stopped", { roomId });
     }, 1000);
 
     setTypingTimeout(newTimeout);
@@ -66,10 +67,13 @@ export default function ChatWindow() {
       sx={{
         padding: 2,
         marginTop: 10,
-        width: "60%",
+        width: "100%",
         backgroundColor: "gray",
       }}
     >
+      {
+        roomId && <Typography>Room: {roomId}</Typography>}
+     
       <Box sx={{ marginBottom: 5 }}>
         {chat.map((data, index) => (
           <Typography
@@ -77,12 +81,16 @@ export default function ChatWindow() {
             sx={{
               textAlign: data.sender ? "right" : "left",
               marginBottom: 1,
+              
             }}
+            
           >
+        
             {data.message}
           </Typography>
         ))}
       </Box>
+      
 
       <Box component="form" onSubmit={handleForm}>
         {typing && (
