@@ -1,4 +1,4 @@
-import  { useState, React }  from 'react';
+import { useState, React } from 'react';
 import { Link } from 'react-router-dom';
 import './LoginForm.css'
 
@@ -8,7 +8,7 @@ const LoginForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        postMessage('', {userName, password})
+        postMessage('http://localhost.3005', { userName, password })
     }
 
     return <div className='login'>
@@ -20,13 +20,13 @@ const LoginForm = () => {
                 <input className="submit" type="submit" value="Login" />
                 <p><a href="" className='forgot'>Forgot Password</a></p>
             </div>
-            </form>
-            <div className='bottom'>
-                <Link to='/SignUp' className='button'>
-                    <p>Sign up for a FREE account!</p>
-                </Link>
-            </div>
-        
+        </form>
+        <div className='bottom'>
+            <Link to='/SignUp' className='button'>
+                <p>Sign up for a FREE account!</p>
+            </Link>
+        </div>
+
     </div>
 }
 
