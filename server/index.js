@@ -42,6 +42,11 @@ socketIOServer.on("connection", (socket) => {
     socket.broadcast.emit("typing-stopped-from-server");
   });
 
+  socket.on("join-room", ({ roomId }) => {
+    console.log("Joining room");
+    socket.join(roomId);
+  });
+
   socket.on("disconnect", () => {
     console.log("User left!");
   });
