@@ -1,12 +1,8 @@
-export default class RoomController {
-    socket;
-    
-    constructor(socket) {
-        this.socket = socket;
-    }
+import BaseController from './BaseController.js';
+
+export default class RoomController extends BaseController {
 
     joinRoom = ({ roomId }) => {
-        console.log("Joining room");
         this.socket.join(roomId)
     }
 }

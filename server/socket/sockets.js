@@ -1,18 +1,13 @@
 import TypingController from "./controllers/TypingController.js";
 import RoomController from "./controllers/RoomController.js";
+import MessageController from "./controllers/MessageController.js";
 
 const sockets = (socket) => {
   const typingController = new TypingController(socket);
   const roomController = new RoomController(socket);
+  const messageController = new MessageController(socket);
 
-  socket.on("message-from-client", ({ message, roomId }) => {
-    let skt = socket.broadcast;
-    skt = roomId ? skt.to(roomId) : skt;
-    console.log(roomId);
-    skt.emit("message", { message });
-  });
-
-  
+  socket.on("send-message", messageController.sendMessage);
 
   socket.on("typing-started", typingController.typingStarted)
   socket.on("typing-stopped", typingController.typingStopped)
