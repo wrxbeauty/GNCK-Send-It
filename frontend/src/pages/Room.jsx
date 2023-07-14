@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useOutletContext, useParams } from "react-router-dom";
-import ChatWindow from "../components/ChatWindow.js";
+import ChatWindow from "../components/ChatWindow.jsx";
 
 export default function Room() {
   const params = useParams();

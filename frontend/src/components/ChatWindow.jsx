@@ -9,7 +9,7 @@ import SendIcon from "@mui/icons-material/Send";
 import Card from "@mui/material/Card";
 import { useOutletContext, useParams } from "react-router-dom";
 
-export default function ChatWindow() {
+ function ChatWindow() {
   const { socket } = useOutletContext();
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState([]);
@@ -114,3 +114,5 @@ export default function ChatWindow() {
     </Card>
   );
 }
+
+export default ChatWindow;
