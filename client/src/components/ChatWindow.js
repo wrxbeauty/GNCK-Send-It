@@ -7,6 +7,7 @@ import InputLabel from "@mui/material/InputLabel";
 import IconButton from "@mui/material/IconButton";
 import SendIcon from "@mui/icons-material/Send";
 import Card from "@mui/material/Card";
+import Button from "@mui/material/Button";
 import { useOutletContext, useParams } from "react-router-dom";
 
 export default function ChatWindow() {
@@ -61,6 +62,11 @@ export default function ChatWindow() {
     setTypingTimeout(newTimeout);
   }
 
+  async function removeRoom() {
+    socket.emit('room-removed', { roomId });
+  };
+
+
   return (
     <Card
       sx={{
@@ -70,8 +76,10 @@ export default function ChatWindow() {
         backgroundColor: "gray",
       }}
     >
+      <Box sx={{display:"flex", justifyContent:"space-between"}}>
       {roomId && <Typography>Room: {roomId}</Typography>}
-
+        {roomId && <Button size="small" variant="text" color="secondary" onClick={removeRoom}>Delete Room</Button>}
+      </Box>
       <Box sx={{ marginBottom: 5 }}>
         {chat.map((data, index) => (
           <Typography

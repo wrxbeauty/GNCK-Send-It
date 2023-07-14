@@ -5,32 +5,45 @@ import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import cors from "cors";
 import sockets from "./socket/sockets.js";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import router from "./api/routes.js";
 
+dotenv.config(); // Load environment variables from .env file
 
-const app = express();
-const PORT = 5001;
+mongoose.set("strictQuery", false); // Set strictQuery to false to address the deprecation warning
 
-const httpServer = http.createServer(app);
-const socketIOServer = new Server(httpServer, {
-  cors: {
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true,
-  },
-});
+async function startServer() {
+  await mongoose.connect(process.env.DB_CONNECTION_STRING, {
+    useNewUrlParser: true,
+  });
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+  const app = express();
+  const PORT = process.env.PORT || 5001;
 
-app.use(cors());
+  const httpServer = http.createServer(app);
+  const socketIOServer = new Server(httpServer, {
+    cors: {
+      origin: ["http://localhost:3000"],
+      methods: ["GET", "POST"],
+      allowedHeaders: ["Content-Type", "my-custom-header"],
+      credentials: true,
+    },
+  });
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
 
-socketIOServer.on("connection", sockets) 
+  app.use(cors());
+  app.use("/", router);
 
-httpServer.listen(PORT, () => {
-  console.log("server is running at http://localhost:5001");
+  socketIOServer.on("connection", sockets);
+
+  httpServer.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}`);
+  });
+}
+
+startServer().catch((error) => {
+  console.error("Error starting the server:", error);
 });
