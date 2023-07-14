@@ -1,5 +1,5 @@
 import { useState, React } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import './LoginForm.css'
 
@@ -24,7 +24,7 @@ const LoginForm = () => {
             console.error(error)
         }
     }
-    
+
     return <div className='login'>
         <form className='loginform' onSubmit={handleSubmit}>
             <div className='top'>
@@ -36,9 +36,11 @@ const LoginForm = () => {
             </div>
         </form>
         <div className='bottom'>
+            
             <Link to='/SignUp' className='button'>
                 <p>Sign up for a FREE account!</p>
             </Link>
+           
         </div>
 
     </div>

@@ -10,7 +10,7 @@ require('dotenv').config
 
 
 // CONFIGURATION
-const PORT = process.env.PORT || 3005
+const PORT = process.env.PORT || 5001
 const app = express()
 const server = require('http').Server(app);
 const io = socketio(server);
@@ -20,7 +20,7 @@ const authRoutes = require("./routes/authorize")
 
 
 //MongoDB Connection
-mongoose.connect("MONGODB_URI=mongodb+srv://Send-IT:s4a23hVo2OYQdGPo@cluster0.4enoych.mongodb.net/?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://Send-It:aHAfCw9Tvqjsj000@cluster0.qwvybwq.mongodb.net/Send-It?retryWrites=true&w=majority")
 
 //db connection
 connection()
@@ -37,9 +37,27 @@ app.use(cors())
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes)
 
-// LISTEN
 
-const port = process.env.PORT || 3005
-app.listen(PORT, () => {
-  console.log('listening on port', PORT);
-})
+//LISTEN
+const port = process.env.PORT || 5001
+// app.listen(PORT, () => {
+//   console.log('listening on port', PORT);
+// })
+
+// Start server
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
+
+// Socket.IO
+io.on('connection', (socket) => {
+  console.log(`Socket ${socket.id} connected`);
+
+  socket.on('sendMessage', (message) => {
+    io.emit('message', message);
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`Socket ${socket.id} disconnected`);
+  });
+});
