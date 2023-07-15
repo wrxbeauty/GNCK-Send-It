@@ -5,9 +5,10 @@ import App from "./App";
 import { ChakraProvider } from "@chakra-ui/react";
 // import ChatProvider from "./Context/ChatProvider";
 import { BrowserRouter } from "react-router-dom";
+import theme from "./chakra-theme";
 
 ReactDOM.render(
-  <ChakraProvider>
+  <ChakraProvider theme={theme}>
     <BrowserRouter>
       {/* <ChatProvider> */}
         <App />
