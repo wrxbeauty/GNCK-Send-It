@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import SignUp from './components/SignUp/SignUp';
 import LoginForm from './components/LoginForm/LoginForm';
-import  ChatWindow from './components/ChatWindow';
+import ChatWindow from './components/ChatWindow';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 
@@ -22,14 +22,6 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path='/login' element={<LoginForm />}></Route>
-          <Route path='/signup' element={<SignUp />}></Route>
-          <Route path='/main' element={<ChatWindow />}></Route>
-        </Routes>
-      </BrowserRouter>
-
       <Container>
         <Header />
         <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -38,8 +30,13 @@ function App() {
 
       </Container>
 
-
-
+      <BrowserRouter>
+        <Routes>
+          <Route path='/login' element={<LoginForm />}></Route>
+          <Route path='/signup' element={<SignUp />}></Route>
+          <Route path='/main' element={<ChatWindow />}></Route>
+        </Routes>
+      </BrowserRouter>
 
 
     </div>

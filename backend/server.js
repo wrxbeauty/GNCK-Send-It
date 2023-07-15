@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5001
 const app = express()
 const server = require('http').Server(app);
 const io = socketio(server);
-const axios = require('axios')
+
 const userRoutes = require("./routes/NewUser")
 const authRoutes = require("./routes/authorize")
 
