@@ -1,14 +1,31 @@
 import { useState, React } from 'react';
 import { Link, BrowserRouter } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import './LoginForm.css'
 
 const LoginForm = () => {
-    const [data, setData] = useState({
-        email: "",
-        password: "",
-    })
+    const navigate = useNavigate();
+    const [values, setValues] = useState({ username: "", password: "" });
+    const toastError = {
+        position: "top-center",
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+    }
     
+    useEffect(() => {
+        if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+          navigate("/");
+        }
+      }, [])
+      
     const handleChange = ({currentTarget: input}) => {
         setData({...data, [input.name]: input.value });
     }

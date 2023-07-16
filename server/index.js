@@ -1,28 +1,19 @@
 // Dependencies
-import express from "express";
-import http from "http";
-import path from "path";
-import { Server } from "socket.io";
-import { fileURLToPath } from "url";
-import cors from "cors";
-//import sockets from "./socket/sockets.js";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import router from "../client/src/api/api/routes.js";
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const authRoutes = require("./routes/auth");
+const messageRoutes = require("./routes/messages");
+const app = express();
+const socket = require("socket.io");
+require("dotenv").config();
 
+app.use(cors());
+app.use(express.json());
 
-
-// Load environment variables from .env file
-dotenv.config(); 
 
 // Set strictQuery to false to address the deprecation warning
 mongoose.set("strictQuery", false); 
-
-//Require models for users, rooms, and messages
-// require('../../models/User.jsx');
-// require('./models/Room');
-// require('./models/Message');
-
 
 // Connect to MongoDB
 async function startServer() {
@@ -46,9 +37,6 @@ async function startServer() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
-  // Routes
-    app.use(cors());
-  app.use("/", router);
 
   socketIOServer.on("connection", sockets);
 
