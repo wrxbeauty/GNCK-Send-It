@@ -14,7 +14,7 @@ export default function Header({ socket, userId, setUserId }) {
     const roomId = uuidv4();
     navigate(`/room/${roomId}`);
     socket.emit("new-room-created", { roomId, userId });
-    // setRooms([...rooms, { roomId, name: 'Test', _id: "testId" }]);
+    setRooms([...rooms, roomId]);
   }
 
   useEffect(() => {

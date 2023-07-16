@@ -1,3 +1,4 @@
+// Dependencies
 import express from "express";
 import http from "http";
 import path from "path";
@@ -9,14 +10,23 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import router from "./api/routes.js";
 
-dotenv.config(); // Load environment variables from .env file
+// Load environment variables from .env file
+dotenv.config(); 
 
-mongoose.set("strictQuery", false); // Set strictQuery to false to address the deprecation warning
+// Set strictQuery to false to address the deprecation warning
+mongoose.set("strictQuery", false); 
 
+// Connect to MongoDB
 async function startServer() {
-  await mongoose.connect(process.env.DB_CONNECTION_STRING, {
+  await mongoose.connect(process.env.DB_CONNECTION_URI, {
     useNewUrlParser: true,
   });
+
+//Require models for users, rooms, and messages
+require('./models/User')
+require('./models/Room')
+require('./models/Message')
+
 
   const app = express();
   const PORT = process.env.PORT || 5001;
@@ -34,6 +44,8 @@ async function startServer() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
+  // Routes
+  app.use(require('./routes/NewUser'));
   app.use(cors());
   app.use("/", router);
 
