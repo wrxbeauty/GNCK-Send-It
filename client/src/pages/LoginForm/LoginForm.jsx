@@ -1,10 +1,10 @@
-import { useState, React } from 'react';
-import { Link, BrowserRouter } from 'react-router-dom';
-import { useNavigate, Link } from "react-router-dom";
+import { useState, useEffect, React } from 'react';
+import { Link, useNavigate, BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './LoginForm.css'
+import { loginRoute } from "../../utils/APIRoutes";
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -25,24 +25,50 @@ const LoginForm = () => {
           navigate("/");
         }
       }, [])
-      
-    const handleChange = ({currentTarget: input}) => {
-        setData({...data, [input.name]: input.value });
+
+      const handleChange = (e) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        try {
-            const url = "https://localhost:3005/api/auth";
-            const { data:res } = await axios.get(url, data);
-            localStorage.setItem("token", res.data);
-            console.log(res.message)
-        } catch(error) {
-            console.error(error)
+    const validateForm = () => {
+        const { username, password } = values;
+        if (username === "") {
+          toast.error("Email and Password is required.", toastError);
+          return false;
+        } else if (password === "") {
+          toast.error("Email and Password is required.", toastError);
+          return false;
         }
-    }
+        return true;
+      };
+    
+      const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (validateForm()) {
+          const { username, password } = values;
+          const { data } = await axios.post(loginRoute, {
+            username,
+            password,
+          });
+          if (data.status === false) {
+            toast.error(data.msg, toastError);
+          }
+          if (data.status === true) {
+            localStorage.setItem(
+              process.env.REACT_APP_LOCALHOST_KEY,
+              JSON.stringify(data.user)
+            );
+    
+            navigate("/");
+          }
+        }
+      };
+    
 
-    return <div className='login'>
+    return (
+        
+    <div className='login'>
+        <ToastContainer />
         <form className='loginform' onSubmit={handleSubmit}>
             <div className='top'>
                 <h1>Please Sign In</h1>
@@ -61,6 +87,6 @@ const LoginForm = () => {
         </div>
 
     </div>
+    )
 }
-
 export default LoginForm;

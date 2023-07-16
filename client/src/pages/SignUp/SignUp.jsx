@@ -1,9 +1,10 @@
-import { useState, React } from 'react'
+import { useState, useEffect, React } from 'react'
 import './SignUp.css'
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { signupRoute } from "../../utils/APIRoutes";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -61,7 +62,7 @@ const SignUp = () => {
         event.preventDefault();
         if (handleValidation()) {
             const { email, username, password } = values;
-            const { data } = await axios.post(registerRoute, {
+            const { data } = await axios.post(signupRoute, {
                 username,
                 email,
                 password,
