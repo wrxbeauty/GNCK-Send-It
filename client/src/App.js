@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { Outlet } from "react-router-dom";
 import { io } from "socket.io-client";
-import LoginForm from './components/LoginForm/LoginForm'
+import LoginForm from './pages/LoginForm/LoginForm'
 import Cookies from 'js-cookies';
 import "./App.css";
 

@@ -1,7 +1,4 @@
-const mongoose = require('mongoose')
-//const jwt = require('jsonwebtoken')
-//const Joi = require('joi')
-
+const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -23,4 +20,4 @@ const userSchema = new mongoose.Schema({
 //     return schema.validate(data)
 // }
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("User", userSchema);

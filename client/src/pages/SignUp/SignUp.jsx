@@ -1,17 +1,25 @@
 import { useState, React } from 'react'
 import './SignUp.css'
 import axios from 'axios';
+import { useNavigate, Link } from "react-router-dom";
 
 const SignUp = () => {
+    const navigate = useNavigate();
     const [data, setData] = useState({
         name: "",
         email: "",
         password: "",
     })
 
-    const handleChange = ({currentTarget: input}) => {
-        setData({...data, [input.name]: input.value });
+    const handleChange = (e) => {
+        setData({...data, [e.target.name]: e.target.value });
     }
+
+    useEffect(() => {
+        if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+          navigate("/");
+        }
+      }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault()
