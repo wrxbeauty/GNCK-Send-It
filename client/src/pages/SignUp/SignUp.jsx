@@ -1,3 +1,5 @@
+// State our dependencies.
+
 import { useState, useEffect, React } from 'react'
 import './SignUp.css'
 import axios from 'axios';
@@ -26,41 +28,21 @@ const SignUp = () => {
         theme: "dark",
     }
 
-    const handleChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value });
-    }
-
     useEffect(() => {
         if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
             navigate("/");
         }
     }, []);
 
-    const handleValidation = () => {
-        const { password, confirmPassword, username, email } = values;
-        if (password !== confirmPassword) {
-            toast.error(
-                "Password and confirm password should be same.",
-                toastError
-            );
-            return false;
-        } else if (password.length < 8) {
-            toast.error(
-                "Password needs to be 8 or more characters.",
-                toastError
-            );
-            return false;
-        } else if (email === "") {
-            toast.error("Please enter a valid email.", toastError);
-            return false;
-        }
 
-        return true;
+    const handleChange = (e) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         if (handleValidation()) {
+            console.log("in validation",signupRoute )
             const { email, username, password } = values;
             const { data } = await axios.post(signupRoute, {
                 username,
@@ -69,9 +51,8 @@ const SignUp = () => {
             });
 
             if (data.status === false) {
-                toast.error(data.msg, toastError);
-            }
-            if (data.status === true) {
+                toast.error(data.message, toastError);
+            }else if (data.status === true) {
                 localStorage.setItem(
                     process.env.REACT_APP_LOCALHOST_KEY,
                     JSON.stringify(data.user)
@@ -80,6 +61,26 @@ const SignUp = () => {
             }
         }
     };
+
+    const handleValidation = () => {
+        const { password, confirmPassword, username, email } = values;
+        if (password !== confirmPassword) {
+            toast.error(
+                "Password and confirm password should be same.", toastError);
+            return false;
+        } else if (password.length < 8) {
+            toast.error("Password needs to be 8 or more characters.", toastError);
+            return false;
+        } else if (username === "") {
+            toast.error("Please end a username.", toastError)
+        } else if (email === "") {
+            toast.error("Please enter a valid email.", toastError);
+            return false;
+        } else {
+            return true;
+        }
+    };
+   
 
     return (
 
@@ -93,12 +94,12 @@ const SignUp = () => {
                         <p className='input'><input type="email" name="email" placeholder='Enter your email' onChange={handleChange} /></p>
                         <p className='input'><input type="password" name="Passwword" placeholder='Enter password' onChange={handleChange} /></p>
                         <p className='input'><input type="password" name="confirmPasswword" placeholder='Confirm password' onChange={handleChange} /></p>
-                        <button className="submit" type="submit" onClick={handleSubmit}>SUBMIT</button>
+                        <button className="submit" type="submit" onClick={handleSubmit}>SIGN UP!!</button>
 
                     </div>
-                    <span>
+                    <p>
                         Already signed up? <Link to="/login">Click Here!</Link>
-                    </span>
+                    </p>
                 </form>
             </div>
         </div>

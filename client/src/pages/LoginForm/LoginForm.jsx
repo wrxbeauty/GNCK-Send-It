@@ -1,5 +1,5 @@
 import { useState, useEffect, React } from 'react';
-import { Link, useNavigate, BrowserRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -71,7 +71,7 @@ const LoginForm = () => {
         <ToastContainer />
         <form className='loginform' onSubmit={handleSubmit}>
             <div className='top'>
-                <h1>Please Sign In</h1>
+                <h1>Login</h1>
                 <p className='username'><input type="email" placeholder='Enter email' onChange={handleChange} required /></p>
                 <p className='password'><input type="password" placeholder='Enter password' onChange={handleChange} required /></p>
                 <button className="submit" type="submit" onClick={handleSubmit}>Login</button>
