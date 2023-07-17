@@ -7,6 +7,7 @@ const dotenv = require('dotenv')
 const app = express();
 require("dotenv").config();
 const userRoute = require('./routes/userRoute');
+const messageRoute = require('./routes/messageRoute')
 const socket = require('socket.io')
 
 // This code sets our server to listen on port 5001.
@@ -27,7 +28,7 @@ mongoose.connect(process.env.DB_CONNECTION_URI, {
         console.log(err.message)
     });
 
-app.use("/api/auth", userRoute)
+app.use("/api/users", userRoute)
 app.use("/api/messages", messageRoute);
 
 const server = app.listen(process.env.PORT, () => {

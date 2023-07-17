@@ -5,6 +5,6 @@ const router = require("express").Router()
 router.post("/signup", signup);
 router.post("/login", login);
 router.get("/allusers/:id", getUsers);
-//router.get("/logout/:id", logout);
+//router.get("/logout/:id", logOut);
 
 module.exports = router;
