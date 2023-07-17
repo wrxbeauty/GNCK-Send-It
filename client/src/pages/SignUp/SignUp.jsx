@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { signupRoute } from "../../utils/APIRoutes";
+import { signupRoute } from "../../utilities/APIRoutes";
 
 const SignUp = () => {
     const navigate = useNavigate();

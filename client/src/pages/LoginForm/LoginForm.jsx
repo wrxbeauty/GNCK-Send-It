@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './LoginForm.css'
-import { loginRoute } from "../../utils/APIRoutes";
+import { loginRoute } from "../../utilities/APIRoutes";
 
 const LoginForm = () => {
     const navigate = useNavigate();

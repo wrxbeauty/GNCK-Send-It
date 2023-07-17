@@ -1,3 +1,5 @@
+// Setting up our dependencies.
+
 const express = require("express");
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -7,12 +9,13 @@ require("dotenv").config();
 const userRoute = require('./routes/userRoute');
 const socket = require('socket.io')
 
+// This code sets our server to listen on port 5001.
+
 const PORT = process.env.PORT || 5001
 
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", userRoute)
 
 mongoose.connect(process.env.DB_CONNECTION_URI, {
     useNewUrlParser: true,
@@ -24,8 +27,8 @@ mongoose.connect(process.env.DB_CONNECTION_URI, {
         console.log(err.message)
     });
 
-app.use("/api/auth", authRoutes);
-app.use("/api/messages", messageRoutes);
+app.use("/api/auth", userRoute)
+app.use("/api/messages", messageRoute);
 
 const server = app.listen(process.env.PORT, () => {
     console.log("Server is running like Usain Bolt!")
@@ -52,10 +55,10 @@ io.on("connection", (socket) => {
         onlineUsers.set(userId, socket.id);
     });
 
-    socket.on("send-msg", (data) => {
+    socket.on("send-message", (data) => {
         const sendUserSocket = onlineUsers.get(data.to);
         if (sendUserSocket) {
-            socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+            socket.to(sendUserSocket).emit("message-recieve", data.message);
         }
     });
 });

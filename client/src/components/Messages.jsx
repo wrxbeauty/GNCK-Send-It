@@ -3,14 +3,14 @@ import { IoMdSend } from "react-icons/io";
 import { Container } from "@mui/material";
 
 
- function Messages({ handleSendMsg }) {
+function Messages({ handleSendMessage}) {
   const [message, setMessage] = useState("");
-  
 
-  const sendChat = (event) => {
+
+  const sendMessage = (event) => {
     event.preventDefault();
     if (message.length > 0) {
-      handleSendMsg(message);
+      handleSendMessage(message);
       setMessage("");
     }
   };
@@ -18,12 +18,12 @@ import { Container } from "@mui/material";
   return (
     <Container>
       <div className="button-container">
-        
+
       </div>
-      <form className="input-container" onSubmit={(event) => sendChat(event)}>
+      <form className="input-container" onSubmit={(event) => sendMessage(event)}>
         <input
           type="text"
-          placeholder="type your message here"
+          placeholder="type here"
           onChange={(e) => setMessage(e.target.value)}
           value={message}
         />

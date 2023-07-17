@@ -3,17 +3,18 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import { Container } from "@mui/material";
-import { allUsersRoute, host } from "../utils/APIRoutes";
-import ChatContainer from "../components/ChatContainer";
+import { allUsersRoute, host } from "../utilities/APIRoutes";
+import MessageContainer from "../components/MessageContainer";
 import Contacts from "../components/Contacts";
-import Welcome from "../components/Home.jsx";
+import Home from "../components/Home.jsx";
 
 function Main() {
   const navigate = useNavigate();
   const socket = useRef();
   const [contacts, setContacts] = useState([]);
-  const [currentChat, setCurrentChat] = useState(undefined);
+  const [currentMessage, setCurrentMessage] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
+
   useEffect(async () => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
       navigate("/login");
@@ -25,6 +26,7 @@ function Main() {
       );
     }
   }, []);
+
   useEffect(() => {
     if (currentUser) {
       socket.current = io(host);
@@ -43,18 +45,18 @@ function Main() {
     }
   }, [currentUser]);
 
-  const handleChatChange = (chat) => {
-     setCurrentChat(chat);
+  const handleMessageChange = (message) => {
+     setCurrentMessage(message);
 
   return (
     <>
       <Container>
         <div className="container">
-          <Contacts contacts={contacts} changeChat={handleChatChange} />
-          {currentChat === undefined ? (
-            <Welcome />
+          <Contacts contacts={contacts} changeMessage={handleMessageChange} />
+          {currentMessage === undefined ? (
+            <Home />
           ) : (
-            <ChatContainer currentChat={currentChat} socket={socket} />
+            <MessageContainer currentMessage={currentMessage} socket={socket} />
           )}
         </div>
       </Container>
