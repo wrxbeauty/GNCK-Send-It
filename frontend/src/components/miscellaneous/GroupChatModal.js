@@ -1,3 +1,5 @@
+// renders a modal for creating a group chat
+
 import {
   Modal,
   ModalOverlay,

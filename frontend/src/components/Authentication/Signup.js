@@ -27,7 +27,7 @@ const Signup = () => {
     if (!name || !email || !password || !confirmpassword) {
       // Input validation: check if all fields are filled
       toast({
-        title: "Please Fill all the Feilds",
+        title: "Please Fill all the Fields",
         status: "warning",
         duration: 5000,
         isClosable: true,

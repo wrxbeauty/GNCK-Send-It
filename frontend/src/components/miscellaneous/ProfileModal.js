@@ -1,3 +1,5 @@
+// renders a modal for displaying user profile information
+
 import { ViewIcon } from "@chakra-ui/icons";
 import {
   Modal,

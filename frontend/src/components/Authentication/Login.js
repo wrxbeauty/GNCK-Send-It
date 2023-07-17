@@ -9,20 +9,23 @@ import { useHistory } from "react-router-dom";
 import { ChatState } from "../../Context/ChatProvider";
 
 const Login = () => {
+  // State variables
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const toast = useToast();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Access the browser history object for navigation
   const history = useHistory();
+  // Get the setUser function from the ChatState context
   const { setUser } = ChatState();
 
+  // Submit form handler
   const submitHandler = async () => {
     setLoading(true);
-
-    // Check if email and password are provided
+    // Validate email and password
     if (!email || !password) {
       toast({
         title: "Please Fill all the Fields",
@@ -42,14 +45,14 @@ const Login = () => {
         },
       };
 
-      // Send login request to the server
+      // Send a login request to the server
       const { data } = await axios.post(
         "/api/user/login",
         { email, password },
         config
       );
 
-      // Display success toast message
+      // Display a success toast message
       toast({
         title: "Login Successful",
         status: "success",
@@ -57,18 +60,15 @@ const Login = () => {
         isClosable: true,
         position: "bottom",
       });
-
-      // Set user data in the context
+      // Set the user data in the context
       setUser(data);
-
-      // Store user info in local storage
+      // Store the user info in localStorage
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
-
-      // Redirect to the chats page
+      // Redirect to the /chats route
       history.push("/chats");
     } catch (error) {
-      // Display error toast message
+      // Display an error toast message
       toast({
         title: "Error Occurred!",
         description: error.response.data.message,
@@ -101,6 +101,7 @@ const Login = () => {
             type={show ? "text" : "password"}
             placeholder="Enter password"
           />
+           {/* Toggle password visibility button */}
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
               {show ? "Hide" : "Show"}
@@ -108,6 +109,7 @@ const Login = () => {
           </InputRightElement>
         </InputGroup>
       </FormControl>
+      {/* Login button */}
       <Button
         bg="#d9fff8ff"
         color="black"
@@ -120,6 +122,7 @@ const Login = () => {
       >
         Login
       </Button>
+           {/* Set guest credentials button */}
       <Button
         variant="solid"
         bg="#aa7bc3ff"

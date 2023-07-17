@@ -1,3 +1,4 @@
+// provides functionality for searching users, accessing chats, displaying notifications, and user actions. 
 // Importing necessary dependencies and components
 import { Button } from "@chakra-ui/button";
 import { useDisclosure } from "@chakra-ui/hooks";

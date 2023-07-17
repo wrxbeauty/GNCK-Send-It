@@ -1,3 +1,4 @@
+// represents a modal for updating a group chat. It allows the user to perform various actions such as renaming the chat, adding users to the chat, and removing users from the chat.
 import { ViewIcon } from "@chakra-ui/icons";
 import {
   Modal,
