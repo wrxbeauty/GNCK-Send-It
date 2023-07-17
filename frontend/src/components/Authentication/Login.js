@@ -1,94 +1,88 @@
-import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom'; // Import useHistory hook to navigate to different routes
-import axios from 'axios'; // Import axios for making HTTP requests
-import { useToast } from '@chakra-ui/react'; // Import useToast hook for displaying notifications
-import {
-  VStack,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Button,
-} from '@chakra-ui/react';
+import { Button } from "@chakra-ui/button";
+import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
+import { VStack } from "@chakra-ui/layout";
+import { useState } from "react";
+import axios from "axios";
+import { useToast } from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
+import { ChatState } from "../../Context/ChatProvider";
 
-export default function Login() {
-  const history = useHistory(); // Access the history object for navigation
-  const toast = useToast(); // Access the toast object for displaying notifications
+const Login = () => {
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
+  const toast = useToast();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [loading, setLoading] = useState(false);
 
-  // State variables
-  const [email, setEmail] = useState(''); // Track email input value
-  const [password, setPassword] = useState(''); // Track password input value
-  const [show, setShow] = useState(false); // Toggle password visibility
-  const [loading, setLoading] = useState(false); // Track loading state
+  const history = useHistory();
+  const { setUser } = ChatState();
 
-  // Toggle password visibility
-  const handleClick = () => {
-    setShow(!show);
-  };
-
-  // Handle form submission logic
   const submitHandler = async () => {
-    setLoading(true); // Set loading state to true
+    setLoading(true);
+
+    // Check if email and password are provided
     if (!email || !password) {
-      // Check if email and password are filled
       toast({
-        title: 'Please Fill all the Fields',
-        status: 'warning',
+        title: "Please Fill all the Fields",
+        status: "warning",
         duration: 5000,
         isClosable: true,
-        position: 'bottom',
+        position: "bottom",
       });
-      setLoading(false); // Set loading state back to false
+      setLoading(false);
       return;
     }
 
     try {
       const config = {
         headers: {
-          'Content-type': 'application/json',
+          "Content-type": "application/json",
         },
       };
 
-      // Make a POST request to the login endpoint with email and password
+      // Send login request to the server
       const { data } = await axios.post(
-        '/api/user/login',
+        "/api/user/login",
         { email, password },
         config
       );
 
-      // Display a success toast notification
+      // Display success toast message
       toast({
-        title: 'Login Successful',
-        status: 'success',
+        title: "Login Successful",
+        status: "success",
         duration: 5000,
         isClosable: true,
-        position: 'bottom',
+        position: "bottom",
       });
 
-      // Store user information in localStorage or user state
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      // Set user data in the context
+      setUser(data);
 
-      setLoading(false); // Set loading state back to false
-      history.push('/chats'); // Navigate to the '/chats' route
+      // Store user info in local storage
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setLoading(false);
+
+      // Redirect to the chats page
+      history.push("/chats");
     } catch (error) {
-      // Display an error toast notification
+      // Display error toast message
       toast({
-        title: 'Error Occurred!',
+        title: "Error Occurred!",
         description: error.response.data.message,
-        status: 'error',
+        status: "error",
         duration: 5000,
         isClosable: true,
-        position: 'bottom',
+        position: "bottom",
       });
-
-      setLoading(false); // Set loading state back to false
+      setLoading(false);
     }
   };
 
   return (
-    <VStack spacing="10px">
-      {/* Email field */}
+    <VStack spacing="10px" height="400px">
       <FormControl id="email" isRequired>
         <FormLabel>Email Address</FormLabel>
         <Input
@@ -98,26 +92,27 @@ export default function Login() {
           onChange={(e) => setEmail(e.target.value)}
         />
       </FormControl>
-      {/* Password field */}
       <FormControl id="password" isRequired>
         <FormLabel>Password</FormLabel>
         <InputGroup size="md">
           <Input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            type={show ? 'text' : 'password'}
+            type={show ? "text" : "password"}
             placeholder="Enter password"
           />
           <InputRightElement width="4.5rem">
             <Button h="1.75rem" size="sm" onClick={handleClick}>
-              {show ? 'Hide' : 'Show'}
+              {show ? "Hide" : "Show"}
             </Button>
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      {/* Login button */}
       <Button
-        colorScheme="blue"
+        bg="#d9fff8ff"
+        color="black"
+        borderColor="black" // Added border color
+        borderWidth="1px" // Added border width
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
@@ -125,18 +120,22 @@ export default function Login() {
       >
         Login
       </Button>
-      {/* Button to get guest user credentials */}
       <Button
         variant="solid"
-        colorScheme="red"
+        bg="#aa7bc3ff"
+        color="black"
+        borderColor="black" // Added border color
+        borderWidth="1px" // Added border width
         width="100%"
         onClick={() => {
-          setEmail('guest@example.com');
-          setPassword('123456');
+          setEmail("guest@example.com");
+          setPassword("123456");
         }}
       >
-        Get Guest User Credentials
+        Set Guest Credentials
       </Button>
     </VStack>
   );
-}
+};
+
+export default Login;

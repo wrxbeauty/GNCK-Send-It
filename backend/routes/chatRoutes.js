@@ -1,27 +1,32 @@
 const express = require("express");
-const { accessChat, fetchChats, createGroupChat, renameGroup,  addToGroup, removeFromGroup, } = require("../controllers/chatControllers");
-
-// } = require("../controllers/chatControllers");
+const {
+  accessChat,
+  fetchChats,
+  createGroupChat,
+  removeFromGroup,
+  addToGroup,
+  renameGroup,
+} = require("../controllers/chatControllers");
 const { protect } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
-// Access chat route
+// Route for creating or fetching a chat (one-to-one or group)
 router.route("/").post(protect, accessChat);
 
-// // Fetch chats route
+// Route for fetching all chats for a user
 router.route("/").get(protect, fetchChats);
 
-// // Create group chat route
+// Route for creating a new group chat
 router.route("/group").post(protect, createGroupChat);
 
-// // Rename group route
+// Route for renaming a group chat
 router.route("/rename").put(protect, renameGroup);
 
-// // Remove user from group route
+// Route for removing a user from a group chat
 router.route("/groupremove").put(protect, removeFromGroup);
 
-// // Add user to group route
+// Route for adding a user to a group chat or leaving a group chat
 router.route("/groupadd").put(protect, addToGroup);
 
 module.exports = router;

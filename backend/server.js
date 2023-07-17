@@ -1,51 +1,95 @@
 const express = require("express");
-const chats = require("./data/data");
-const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
-const chatRoutes = require("./routes/chatRoutes")
+const chatRoutes = require("./routes/chatRoutes");
+const messageRoutes = require("./routes/messageRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
+const path = require("path");
 
+dotenv.config();
+connectDB();
 const app = express();
 
-// Middleware to parse JSON data in the request body
-app.use(express.json());
+app.use(express.json()); // Middleware to parse JSON data
 
-// Load environment variables from .env file
-dotenv.config();
-
-// Connect to MongoDB
-connectDB();
-
-// Define a route for the root URL "/"
-app.get('/', (req, res) => {
-    // Send a response with the message "API is Running"
-    res.send("API is Running");
-});
+// Routes
 app.use("/api/user", userRoutes);
-app.use('/api/chat', chatRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api/message", messageRoutes);
 
-app.use(notFound)
-app.use(errorHandler)
-// app.use("/api/chat", chatRoutes);
-// app.use("/api/message", messageRoutes);
-// // Define a route for the "/api/chat" endpoint
-// app.get('/api/chat', (req, res) => {
-//     // Send the 'chats' array as the response
-//     res.send(chats);
-// });
+// -------------------------- Deployment ------------------------------
 
-// // Define a route for the "/api/chat/:id" endpoint
-// app.get('/api/chat/:id', (req, res) => {
-//     // Find the chat with the specified ID in the 'chats' array
-//     const singleChat = chats.find((c) => c._id === req.params.id);
-    
-//     // Send the found chat as the response
-//     res.send(singleChat);
-// });
+const __dirname1 = path.resolve();
 
-// Define the port to listen on, using the value from the environment variable PORT, or fallback to 5001
-const PORT = process.env.PORT || 5001;
+if (process.env.NODE_ENV === "production") {
+  // Serve static files from the frontend build directory
+  app.use(express.static(path.join(__dirname1, "/frontend/build")));
 
-// Start the server and listen on the specified port
-app.listen(PORT, console.log(`Server Started on PORT ${PORT}`));
+  // Serve the index.html file for all other routes
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running..");
+  });
+}
+
+// -------------------------- Deployment ------------------------------
+
+// Error Handling middlewares
+app.use(notFound);
+app.use(errorHandler);
+
+const PORT = process.env.PORT;
+
+const server = app.listen(
+  PORT,
+  console.log(`Server running on PORT ${PORT}...`.yellow.bold)
+);
+
+// Socket.io configuration
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+    // credentials: true,
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("Connected to socket.io");
+
+  // Socket.io setup
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
+  });
+
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("User Joined Room: " + room);
+  });
+
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+  socket.on("new message", (newMessageRecieved) => {
+    var chat = newMessageRecieved.chat;
+
+    if (!chat.users) return console.log("chat.users not defined");
+
+    // Send the new message to all users in the chat room
+    chat.users.forEach((user) => {
+      if (user._id == newMessageRecieved.sender._id) return;
+
+      socket.in(user._id).emit("message recieved", newMessageRecieved);
+    });
+  });
+
+  socket.off("setup", () => {
+    console.log("USER DISCONNECTED");
+    socket.leave(userData._id);
+  });
+});

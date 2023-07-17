@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Container,
@@ -9,13 +8,22 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useHistory } from "react-router";
 import Login from "../components/Authentication/Login";
 import Signup from "../components/Authentication/Signup";
 
-export default function Homepage() {
+function Homepage() {
+  const history = useHistory();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+
+    if (user) history.push("/chats");
+  }, [history]);
+
   return (
     <Container maxW="xl" centerContent>
-      {/* Outer Box */}
       <Box
         d="flex"
         justifyContent="center"
@@ -26,30 +34,21 @@ export default function Homepage() {
         borderRadius="lg"
         borderWidth="1px"
       >
-        {/* Text component for the app name */}
-        <Text fontSize="4xl" fontFamily="Work sans">
+        <Text fontSize="48px" fontFamily="Montserrat" color="#aa7bc3ff" fontWeight="700" textShadow="1px 1px 0px #000000">
           Send-It
         </Text>
       </Box>
-      {/* Inner Box */}
-      <Box bg="white" w="100%" p={4} borderRadius="lg" borderWidth="1px">
-        {/* Tabs component */}
+      <Box bg="white" w="100%" p={4} borderRadius="lg" borderWidth="1px" color="#aa7bc3ff" textShadow=".5px .5px 0px #000000" >
         <Tabs isFitted variant="soft-rounded">
-          {/* TabList component */}
           <TabList mb="1em">
-            {/* Individual Tab components */}
             <Tab>Login</Tab>
             <Tab>Sign Up</Tab>
           </TabList>
-          {/* TabPanels component */}
           <TabPanels>
-            {/* Individual TabPanel components */}
             <TabPanel>
-              {/* Render the Login component */}
               <Login />
             </TabPanel>
             <TabPanel>
-              {/* Render the Signup component */}
               <Signup />
             </TabPanel>
           </TabPanels>
@@ -58,3 +57,5 @@ export default function Homepage() {
     </Container>
   );
 }
+
+export default Homepage;

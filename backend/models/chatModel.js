@@ -1,33 +1,22 @@
-// Importing the mongoose library
 const mongoose = require("mongoose");
 
-// Defining the chatModel schema using mongoose.Schema()
+// Define the chat model schema
 const chatModel = mongoose.Schema(
   {
-    // Defining a field called chatName of type String with trimming enabled
-    chatName: { type: String, trim: true },
-
-    // Defining a field called isGroupChat of type Boolean with a default value of false
-    isGroupChat: { type: Boolean, default: false },
-
-    // Defining a field called users as an array of ObjectIds referencing the "User" model
-    users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-
-    // Defining a field called latestMessage as an ObjectId referencing the "Message" model
+    chatName: { type: String, trim: true }, // Name of the chat
+    isGroupChat: { type: Boolean, default: false }, // Indicates if the chat is a group chat
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Array of user IDs participating in the chat
     latestMessage: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Message",
-    },
-
-    // Defining a field called groupAdmin as an ObjectId referencing the "User" model
-    groupAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    }, // ID of the latest message in the chat
+    groupAdmin: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // ID of the group chat admin
   },
-  // Adding timestamps to the schema, which automatically adds createdAt and updatedAt fields
-  { timestamps: true }
+  { timestamps: true } // Adds timestamps for createdAt and updatedAt fields
 );
 
-// Creating a mongoose model named "Chat" using the chatModel schema
+// Create the Chat model based on the chatModel schema
 const Chat = mongoose.model("Chat", chatModel);
 
-// Exporting the Chat model to make it available for other parts of the codebase
+// Export the Chat model
 module.exports = Chat;

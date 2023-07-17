@@ -1,59 +1,44 @@
-// Importing the mongoose library
 const mongoose = require("mongoose");
-// Importing the bcryptjs library for password hashing
 const bcrypt = require("bcryptjs");
 
-// Defining the userSchema schema using mongoose.Schema()
+// Define the user schema
 const userSchema = mongoose.Schema(
   {
-    // Defining a field called name of type String which is required
-    name: { type: "String", required: true },
-
-    // Defining a field called email of type String which is unique and required
-    email: { type: "String", unique: true, required: true },
-
-    // Defining a field called password of type String which is required
-    password: { type: "String", required: true },
-
-    // Defining a field called pic of type String which is required with a default value
+    name: { type: "String", required: true }, // Name of the user
+    email: { type: "String", unique: true, required: true }, // Email of the user (unique constraint)
+    password: { type: "String", required: true }, // Password of the user
     pic: {
       type: "String",
-      // required: true,
+      required: true,
       default:
-        "https://i.pinimg.com/550x/18/b9/ff/18b9ffb2a8a791d50213a9d595c4dd52.jpg",
-    },
-
-    // Defining a field called isAdmin of type Boolean which is required with a default value of false
+        "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    }, // Profile picture URL of the user
     isAdmin: {
       type: Boolean,
       required: true,
       default: false,
-    },
+    }, // Indicates if the user is an admin or not
   },
-  // Adding timestamps to the schema, which automatically adds createdAt and updatedAt fields
-  { timestaps: true }
+  { timestamps: true } // Adds timestamps for createdAt and updatedAt fields
 );
 
-// Adding a custom method to the userSchema for password comparison
+// Method to compare entered password with stored hashed password
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Adding a pre-save middleware to the userSchema for password hashing
+// Pre-save middleware to hash the password before saving the user
 userSchema.pre("save", async function (next) {
-  if (!this.isModified) {
+  if (!this.isModified("password")) {
     next();
   }
 
-  // Generate a salt for password hashing
-  const salt = await bcrypt.genSalt(10);
-
-  // Hash the user's password using the generated salt
-  this.password = await bcrypt.hash(this.password, salt);
+  const salt = await bcrypt.genSalt(10); // Generate a salt for password hashing
+  this.password = await bcrypt.hash(this.password, salt); // Hash the password with the generated salt
 });
 
-// Creating a mongoose model named "User" using the userSchema schema
+// Create the User model based on the userSchema
 const User = mongoose.model("User", userSchema);
 
-// Exporting the User model to make it available for other parts of the codebase
+// Export the User model
 module.exports = User;

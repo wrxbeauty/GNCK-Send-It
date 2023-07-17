@@ -1,3 +1,4 @@
+// sample data structure for representing chat conversations
 const chats = [
   {
     isGroupChat: false,
