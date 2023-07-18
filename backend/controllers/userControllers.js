@@ -1,0 +1,96 @@
+const asyncHandler = require("express-async-handler");
+const User = require("../models/userModel");
+const generateToken = require("../config/generateToken");
+
+// @description     Get or Search all users
+// @route           GET /api/user?search=
+// @access          Public
+const allUsers = asyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  // Find all users based on the provided keyword (search query)
+  // Exclude the logged-in user (_id: { $ne: req.user._id })
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  res.send(users);
+});
+
+// @description     Register new user
+// @route           POST /api/user/
+// @access          Public
+const registerUser = asyncHandler(async (req, res) => {
+  const { name, email, password, pic } = req.body;
+
+  if (!name || !email || !password) {
+    res.status(400);
+    throw new Error("Please Enter all the Fields");
+  }
+
+  // Check if the user already exists
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    res.status(400);
+    throw new Error("User already exists");
+  }
+
+  // Create the new user
+  const user = await User.create({
+    name,
+    email,
+    password,
+    pic,
+  });
+
+  if (user) {
+    // Generate a token for the user
+    const token = generateToken(user._id);
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      pic: user.pic,
+      token: token,
+    });
+  } else {
+    res.status(400);
+    throw new Error("User not found");
+  }
+});
+
+// @description     Auth the user
+// @route           POST /api/users/login
+// @access          Public
+const authUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  // Find the user by email
+  const user = await User.findOne({ email });
+
+  if (user && (await user.matchPassword(password))) {
+    // Generate a token for the user
+    const token = generateToken(user._id);
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      pic: user.pic,
+      token: token,
+    });
+  } else {
+    res.status(401);
+    throw new Error("Invalid Email or Password");
+  }
+});
+
+module.exports = { allUsers, registerUser, authUser };

@@ -1,0 +1,32 @@
+toast is a function provided by the Chakra UI library for displaying toast notifications. A toast notification is a small pop-up message that appears on the screen to provide feedback or information to the user. It is typically used to display success messages, error messages, warnings, or other relevant information.
+
+Chakra UI's useToast hook allows you to show toast notifications easily. It provides a convenient way to display temporary messages to the user without interrupting the user flow. The useToast hook returns the toast function, which can be called with an object containing the toast configuration, such as the title, status, duration, and position.
+
+In the code, the toast function is used to display success and error messages to the user after certain events, such as successful login or an error occurred during login. It provides visual feedback to the user about the outcome of their actions.
+
+
+ Here's an explanation of each Chakra UI component used in the code:
+
+ViewIcon: This is an icon component provided by Chakra UI. It renders an eye icon, typically used to indicate the action of viewing or displaying something.
+
+Modal: This component represents a modal dialog box. It is used to display content on top of the current page, creating a modal overlay that requires user interaction to dismiss.
+
+ModalOverlay: This component is used as a backdrop for the modal content. It covers the entire viewport and provides a visually distinct background to the modal.
+
+ModalContent: This component contains the actual content of the modal. It typically includes a header, body, and footer section.
+
+ModalHeader: This component represents the header section of the modal. It typically contains a title or heading to provide context to the modal content.
+
+ModalCloseButton: This component renders a close button within the modal header. It allows the user to close the modal when clicked.
+
+ModalBody: This component represents the main body section of the modal. It contains the primary content of the modal, such as text, images, or other components.
+
+ModalFooter: This component represents the footer section of the modal. It typically contains actions or buttons related to the modal content, such as submitting or canceling the operation.
+
+useDisclosure: This is a custom hook provided by Chakra UI. It manages the state of the modal, including its visibility and opening/closing functions.
+
+IconButton: This component renders a clickable icon button. It can be used to trigger an action or open the modal when clicked.
+
+Text: This component renders text content. It is used to display the user's email address in this case.
+
+Image: This component renders an image. It displays the user's profile picture with the specified source (src) and alt text (alt).
