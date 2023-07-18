@@ -7,16 +7,16 @@ const messageRoutes = require("./routes/messageRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const path = require("path");
 
-dotenv.config();
-connectDB();
-const app = express();
+dotenv.config(); //Load environment variables
+connectDB(); //Connect to the database
+const app = express(); // Create an Express application
 
 app.use(express.json()); // Middleware to parse JSON data
 
 // Routes
-app.use("/api/user", userRoutes);
-app.use("/api/chat", chatRoutes);
-app.use("/api/message", messageRoutes);
+app.use("/api/user", userRoutes); // User routes
+app.use("/api/chat", chatRoutes); // Chat routes
+app.use("/api/message", messageRoutes); // Message routes
 
 // -------------------------- Deployment ------------------------------
 
@@ -39,21 +39,23 @@ if (process.env.NODE_ENV === "production") {
 // -------------------------- Deployment ------------------------------
 
 // Error Handling middlewares
-app.use(notFound);
-app.use(errorHandler);
+app.use(notFound); // 404 Not Found middleware
+app.use(errorHandler); // Custom error handling middleware
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT; // Set the port from environment variable
 
 const server = app.listen(
   PORT,
   console.log(`Server running on PORT ${PORT}...`.yellow.bold)
+  // Start the server
 );
 
 // Socket.io configuration
 const io = require("socket.io")(server, {
-  pingTimeout: 60000,
+  pingTimeout: 60000, // Socket ping timeout
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:3000", // Allowed origin for CORS
+    // credentials: true,
     // credentials: true,
   },
 });
@@ -63,8 +65,8 @@ io.on("connection", (socket) => {
 
   // Socket.io setup
   socket.on("setup", (userData) => {
-    socket.join(userData._id);
-    socket.emit("connected");
+    socket.join(userData._id);// Join the room using user's ID
+    socket.emit("connected");// Emit a 'connected' event to the client
   });
 
   socket.on("join chat", (room) => {
@@ -90,6 +92,6 @@ io.on("connection", (socket) => {
 
   socket.off("setup", () => {
     console.log("USER DISCONNECTED");
-    socket.leave(userData._id);
+    socket.leave(userData._id); // Leave the room when user is disconnected
   });
 });
